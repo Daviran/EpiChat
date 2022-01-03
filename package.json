@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "http": "^0.0.1-security",
+    "socket.io": "^4.4.0"
+  },
+  "name": "ircepi",
+  "version": "1.0.0",
+  "description": "An irc project with Epitech",
+  "main": "ircEpi/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpitechMscProPromo2024/T-JSF-600-LIL-6-1-IRCjavascript-david.bugnon.git"
+  },
+  "author": "David and Edouard",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EpitechMscProPromo2024/T-JSF-600-LIL-6-1-IRCjavascript-david.bugnon/issues"
+  },
+  "homepage": "https://github.com/EpitechMscProPromo2024/T-JSF-600-LIL-6-1-IRCjavascript-david.bugnon#readme"
+}
