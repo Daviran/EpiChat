@@ -1,7 +1,8 @@
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Head from './components/head.js';
 import Foot from './components/foot.js';
-
+import TheNav from './components/theNav'
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
       </header>
 
       <main>
-      
+      <TheNav/>
       </main>
       <footer className='App-footer'> 
 
