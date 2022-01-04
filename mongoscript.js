@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 conn = new Mongo();
 db = conn.getDB("ircEpi");
 
