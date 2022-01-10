@@ -12,7 +12,7 @@ const Navbar = () => {
     <div>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
         <NavLink className="navbar-brand" to="/">
-          MongoDB
+          IRCEpi
         </NavLink>
         <button
           className="navbar-toggler"
@@ -30,7 +30,17 @@ const Navbar = () => {
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
               <NavLink className="nav-link" to="/create">
-                Create Record
+                Create Channel
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/create">
+                View Channels
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/create">
+                Your profile
               </NavLink>
             </li>
           </ul>
