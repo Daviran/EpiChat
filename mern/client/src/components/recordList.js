@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from "react-router-dom";
 
 const Record = (props) => (
+  
   <tr>
     <td>{props.record.name}</td>
     <td>{props.record.creator}</td>
