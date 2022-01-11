@@ -34,12 +34,12 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/create">
+              <NavLink className="nav-link" to="/">
                 View Channels
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/create">
+              <NavLink className="nav-link" to="/profile">
                 Your profile
               </NavLink>
             </li>

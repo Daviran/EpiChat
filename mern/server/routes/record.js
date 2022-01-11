@@ -57,7 +57,6 @@ recordRoutes.route("/update/:id").post(function (req, response) {
     $set: {
       name: req.body.name,
       creator: req.body.creator,
-      person_level: req.body.person_level,
     },
   };
   db_connect
