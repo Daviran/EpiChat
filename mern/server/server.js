@@ -1,5 +1,20 @@
 const express = require('express');
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+
 const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+    cors: {
+        origins: ["*"],
+        methods: ["GET", "POST"] 
+    }
+})
+
+const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
+
+
 // const bodyParser = require('body-parser');
 const cors = require('cors');
 const port = 5000;
@@ -8,8 +23,65 @@ app.use(express.json());
 app.use(require("./routes/record"));
 
 const dbo = require("./db/conn");
+const { error } = require('console');
 
-app.listen(port,()=>{
+
+io.on('connection', socket => {
+
+    socket.on('join', (pseudo, room) => {
+       
+        socket.emit('message', { user: 'admin', text: `${pseudo}, bienvenue dans le salon ${room}`});
+        socket.broadcast.to(room).emit('message', { user: 'admin', text: `${pseudo} s'est connecté !`})
+
+    });
+
+    socket.on('sendMessage', (message, callback) => {
+        socket.broadcast.emit('message', message);
+
+        callback();
+    })
+    // socket.on('sendMessage', messageSent);
+    // socket.on('disconnect', userLeft);
+
+
+    // console.log("new connection");
+    // console.log("SOCKET: " + socket);
+
+    // socket.on('join', ({ pseudo, room }, callback) => {
+    //     console.log("Hey");
+    //     const { error, user } = addUser({ id: socket.id, pseudo, room });
+
+    //     if(error) return callback(error);
+
+    //     socket.emit('message', { user: 'admin', text: `${user.pseudo}, bienvenue dans le salon ${user.room}`});
+    //     socket.broadcast.to(user.room).emit('message', { user: 'admin', text: `${user.pseudo} s'est connecté !`})
+
+    //     console.log("pseudo: " + pseudo);
+    //     console.log("room: " + room);
+
+    //     console.log("userPseudo: " + user.pseudo);
+    //     console.log("userRoom: " + user.room);
+
+    //     socket.join(user.room);
+
+    //     callback();
+    // })
+
+    // socket.on('sendMessage', (message, callback) => {
+    //     const user = getUser(socket.id);
+    //     console.log(user);
+
+    //     io.to(user.room).emit('message', { user: user.pseudo, text: message});
+
+    //     callback();
+    // })
+
+    // socket.on('disconnection', () => {
+    //     console.log('User has left !');
+    // })
+})
+
+httpServer.listen(port,()=>{
     dbo.connectToServer(function(err){
         if(err) console.error(err);
     });

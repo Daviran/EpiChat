@@ -10,15 +10,17 @@ export default function CreateChannel() {
 
     const [salon, setSalon] = useState('')
     const [master, setMaster] = useState('')
+    const [img, setImage] = useState('')
     const [newChannel, setNewChannel] = useState([{
         name: '',
-        creator: ''
+        creator: '',
+        img: ''
     }])
 
 
     function handleClick() {
         console.log("hey");
-        return setNewChannel({ name: salon, creator: master} );
+        return setNewChannel({ name: salon, creator: master, img: img } );
     }
 
     function handleSubmit(event) {
@@ -29,7 +31,8 @@ export default function CreateChannel() {
         axios.post('http://localhost:5000/channel/add', newChannel);
         setNewChannel({
             name: '',
-            creator: ''
+            creator: '',
+            img: ''
         })
     }
 
@@ -42,6 +45,12 @@ export default function CreateChannel() {
                     <Form.Group className="mb-3">
                         <Form.Label htmlFor="room">Nom du salon</Form.Label>
                         <Form.Control onChange={(event) => setSalon(event.target.value)} name="room" type="text" placeholder="Institutions du Royaume de France" />
+                    </Form.Group>
+                </Row>
+                <Row className="justify-content-md-center">
+                    <Form.Group className="mb-3">
+                        <Form.Label htmlFor="image">Logo du salon</Form.Label>
+                        <Form.Control onChange={(event) => setImage(event.target.value)} name="img" type="file" id='image'/>
                     </Form.Group>
                 </Row>
                 <Row className="justify-content-md-center">
