@@ -1,11 +1,13 @@
 const { MongoClient } = require("mongodb");
-const Db = "mongodb+srv://truemern:mongo1@ircepi.u4ypd.mongodb.net/IRCEPI?retryWrites=true&w=majority";
+const Db = "mongodb+srv://truemern:mongo1@ircepi.u4ypd.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 if(Db === undefined) {throw new Error ("My ATLAS is not defined");}
 const client = new MongoClient(Db, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
- 
+ if(client === undefined) {
+   console.log("NO CLIENT")
+ }
 var _db;
  
 module.exports = {
