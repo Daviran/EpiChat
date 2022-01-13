@@ -1,0 +1,15 @@
+.outerChatContainer {
+  display: flex;
+  background-color: #131d41;
+  color: #f0f0f0;
+  height: calc(100vh - 56px);
+  width: 100%; }
+
+.innerChatContainer {
+  background-color: #f0f0f0;
+  height: calc(100vh - 56px);
+  color: black;
+  width: 60%;
+  position: relative; }
+
+/*# sourceMappingURL=Chat.css.map */

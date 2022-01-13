@@ -1,0 +1,15 @@
+.channel {
+  margin-bottom: 2rem; }
+  .channel__input {
+    margin: 1rem 0 0.5rem 0; }
+  .channel__button {
+    margin: 0 0 0.5rem 0; }
+  .channel__link {
+    margin: 0.5rem 0 0.5rem 0;
+    text-align: center;
+    display: flex;
+    justify-content: space-evenly; }
+  .channel__img {
+    height: 150px; }
+
+/*# sourceMappingURL=Channel.css.map */

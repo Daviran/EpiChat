@@ -1,0 +1,19 @@
+.inputForm {
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.input {
+    height: 84px;
+    width: 80%;
+    box-sizing: border-box;
+}
+
+.sendButton {
+    height: 84px;
+    width: 20%;
+    box-sizing: border-box;
+}

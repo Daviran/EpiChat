@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,iBAAkB;EACd,UAAU,EAAE,IAAI;EAChB,wBAAS;IACL,UAAU,EAAE,IAAI",
+"sources": ["CreateChannel.scss"],
+"names": [],
+"file": "CreateChannel.css"
+}

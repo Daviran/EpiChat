@@ -12,6 +12,7 @@ import Banner from './components/Banner/Banner';
 import ChannelList from "./components/ChannelList/ChannelList";
 import CreateChannel from "./components/CreateChannel/CreateChannel";
 import EditChannel from "./components/EditChannel/EditChannel";
+import Chat from "./components/Chat/Chat";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
               <ChannelList />
             </Route>
             <Route path="/edit/:id" component={EditChannel} />
+            <Route path="/chat/:id" component={Chat} />
             <Route exact path="/create">
               <CreateChannel />
             </Route>

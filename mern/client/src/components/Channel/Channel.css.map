@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA,QAAS;EACL,aAAa,EAAE,IAAI;EACnB,eAAS;IACL,MAAM,EAAE,eAAe;EAE3B,gBAAU;IACN,MAAM,EAAE,YAAY;EAExB,cAAQ;IACJ,MAAM,EAAE,iBAAiB;IACzB,UAAU,EAAE,MAAM;IAClB,OAAO,EAAE,IAAI;IACb,eAAe,EAAE,YAAY;EAEjC,aAAO;IACH,MAAM,EAAE,KAAK",
+"sources": ["Channel.scss"],
+"names": [],
+"file": "Channel.css"
+}
