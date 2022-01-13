@@ -6,7 +6,7 @@ import '../InfoUserList/InfoUserList.css';
 
 export default function InfoUserList({ pseudos, location }) {
 
-    const [users, setUsers] = useState([null]);
+    const [users, setUsers] = useState([]);
 
     useEffect(() => {
         console.log(pseudos);

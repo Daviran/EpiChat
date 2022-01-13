@@ -2,14 +2,17 @@ import React, { useState } from 'react'
 import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button'
+import Button from 'react-bootstrap/Button';
 
 
 import './Channel.css';
 
 export default function Channel({room, creator, id, img, deleteChannel}) {
 
-    const [pseudo, setPseudo] = useState('')
+    const [pseudo, setPseudo] = useState('');
+    const ENDPOINT = 'http://localhost:5000'
+
+    
 
     function handleClick(id) {
         deleteChannel(id);
@@ -21,6 +24,8 @@ export default function Channel({room, creator, id, img, deleteChannel}) {
             alert("Veuillez renseigner un pseudo !")
         }
         else {
+            // const socket = io.connect(ENDPOINT);
+            // socket.emit('join', room);
             return
         }
     
@@ -35,7 +40,7 @@ export default function Channel({room, creator, id, img, deleteChannel}) {
             </Card.Header>
             <Card.Body>
             <div>
-                <Form.Control className='channel__input' as='input' onChange={(event) => setPseudo(event.target.value)} placeholder='Pseudo' type='text' />
+                <Form.Control className='channel__input' onChange={(event) => setPseudo(event.target.value)} placeholder='Pseudo' type='text' />
                 <Link onClick={(event) => handleJoinClick(event)} to={`/chat/${id}?pseudo=${pseudo}&room=${room}`}>
                     <Button className='channel__button' variant='primary'>Joindre le chat</Button>
                 </Link>

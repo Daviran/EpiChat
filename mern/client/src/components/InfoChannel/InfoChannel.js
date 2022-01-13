@@ -1,7 +1,6 @@
 import React from 'react'
 import ListGroup from 'react-bootstrap/ListGroup';
 import Image from 'react-bootstrap/Image';
-import queryString from 'query-string';
 
 
 import './InfoChannel.css';

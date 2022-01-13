@@ -7,9 +7,9 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
     cors: {
-        origins: ["*"],
+        origins: "http://localhost:3000",
         methods: ["GET", "POST"] 
-    }
+    },
 })
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./users');
@@ -26,19 +26,27 @@ const dbo = require("./db/conn");
 const { error } = require('console');
 
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
 
-    socket.on('join', (pseudo, room) => {
-       
-        socket.emit('message', { user: 'admin', text: `${pseudo}, bienvenue dans le salon ${room}`});
-        socket.broadcast.to(room).emit('message', { user: 'admin', text: `${pseudo} s'est connecté !`})
+    socket.on('join', (pseudo, room, cb) => {
+        socket.join(room);
+        const messageData = {
+            room: room,
+            author: room,
+            message: `${pseudo}, bienvenue dans le salon ${room}`,
+            time:
+                new Date(Date.now()).getHours() +
+                ":" + 
+                new Date(Date.now()).getMinutes(),
+        };
+        cb(messageData);
 
     });
 
-    socket.on('sendMessage', (message, callback) => {
-        socket.broadcast.emit('message', message);
-
-        callback();
+    socket.on('sendMessage', (data, cb) => {
+        console.log(data);
+        socket.to(data.room).emit('message', data);
+        cb();
     })
     // socket.on('sendMessage', messageSent);
     // socket.on('disconnect', userLeft);
@@ -76,9 +84,9 @@ io.on('connection', socket => {
     //     callback();
     // })
 
-    // socket.on('disconnection', () => {
-    //     console.log('User has left !');
-    // })
+    socket.on('disconnect', () => {
+        console.log('User has left !');
+    })
 })
 
 httpServer.listen(port,()=>{
