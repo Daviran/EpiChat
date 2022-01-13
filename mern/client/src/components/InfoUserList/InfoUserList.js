@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import InfoUser from '../InfoUser/InfoUser';
 import ListGroup from 'react-bootstrap/ListGroup';
-import queryString from 'query-string';
 
+import '../InfoUserList/InfoUserList.css';
 
 export default function InfoUserList({ pseudos, location }) {
 
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState([null]);
 
     useEffect(() => {
         console.log(pseudos);
@@ -21,11 +21,10 @@ export default function InfoUserList({ pseudos, location }) {
     }
 
     return (
-        <ListGroup>
-            <h1>Titre</h1>
+        <ListGroup className='infoUserList'>
             <button onClick={(event) => handleClick(event)}>click</button>
            {users.map((user) => {
-               <InfoUser user={user} />
+               return <InfoUser key={user} user={user} />
            })}
         </ListGroup>
     )

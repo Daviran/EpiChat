@@ -7,9 +7,7 @@ export default function InfoUser({ user }) {
 
     return (
         <ListGroup.Item>
-            <h1>Bonjour</h1>
-            <p style={{color: "black"}}>{user}</p>
-            {console.log(user)}
+            { user !== null ? (<p>{user}</p>) : null }
         </ListGroup.Item>
     )
 }

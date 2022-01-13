@@ -7,6 +7,8 @@ import Input from '../Input/Input';
 import InfoChannelList from '../InfoChannelList/InfoChannelList';
 import InfoUserList from '../InfoUserList/InfoUserList';
 
+import './Chat.css';
+
 export default function Chat({ location }) {
 
    
@@ -48,7 +50,6 @@ export default function Chat({ location }) {
 
     const sendMessage = (event) => {
         event.preventDefault();
-
         if(message) {
             socket.emit('sendMessage', message, () => setMessage(''));
         }
@@ -57,13 +58,13 @@ export default function Chat({ location }) {
     console.log(message, messages);
 
     return (
-        <div>
-            <div>
-                <InfoChannelList pseudo={pseudo} />
+        <div className='outerChatContainer'>
+                <InfoChannelList pseudo={pseudo} salon={room}/>
+            <div className='innerChatContainer'>
                 <InfoBar room={room} />
                 <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
-                <InfoUserList location={location} pseudos={pseudos} />
             </div>
+                <InfoUserList location={location} pseudos={pseudos} />
         </div>
     )
 }

@@ -3,10 +3,13 @@ import axios from 'axios';
 import InfoChannel from '../InfoChannel/InfoChannel';
 import ListGroup from 'react-bootstrap/ListGroup';
 
-export default function InfoChannelList({ pseudo }) {
+import '../InfoChannelList/InfoChannelList.css';
+
+
+export default function InfoChannelList({ pseudo, salon }) {
 
     const [channels, setChannel] = useState([]);
-       
+
     useEffect(() => {
     const getChannels = async () => {
         const fetchChannels = await axios.get('http://localhost:5000/channel/');
@@ -16,18 +19,15 @@ export default function InfoChannelList({ pseudo }) {
             });
         }
         console.log(fetchChannels.data)    
-        console.log(channels);
-        console.log(pseudo);
         };
 
         getChannels();
     }, []);
 
     return (
-        <ListGroup>
-            <h1>InfoChannellist</h1>
+        <ListGroup className='infoChannelList'>
             {channels.map((channel) => {
-                <InfoChannel id={channel.id} img={channel.img} room={channel.room} creator={channel.creator} pseudo={pseudo} />
+                return <InfoChannel key={channel.id} id={channel.id} img={channel.img} room={channel.room} creator={channel.creator} pseudo={pseudo} salon={salon} />
             })}
         </ListGroup>
     )

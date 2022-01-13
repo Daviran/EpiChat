@@ -1,0 +1,28 @@
+.infoBar {
+    display: flex;
+    position: relative;
+    background-color: rgb(19, 29, 65);
+    color: white;
+    height: 84px;
+}
+
+.onlineIcon {
+    width: 10px;
+    height: 10px;
+    margin: 0 2rem 0 1rem;
+}
+
+.leftInnerContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.leftInnerContainer h3 {
+    margin: 0;
+}
+
+.rightInnerContainer {
+    position: absolute;
+    right: 10px;
+}

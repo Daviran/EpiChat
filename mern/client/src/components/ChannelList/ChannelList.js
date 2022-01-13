@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Channel from '../Channel/Channel'
+import Container from 'react-bootstrap/Container';
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import './ChannelList.css';
 
 export default function ChannelList() {
 
@@ -12,7 +16,7 @@ export default function ChannelList() {
         console.log(fetchChannels);
         for(let i = 0; i < fetchChannels.data.length; i++) {
             setChannel(prevChannels => {
-                return [...prevChannels, {id: fetchChannels.data[i]._id, room: fetchChannels.data[i].name, creator: fetchChannels.data[i].creator}]
+                return [...prevChannels, {id: fetchChannels.data[i]._id, room: fetchChannels.data[i].name, creator: fetchChannels.data[i].creator, img: fetchChannels.data[i].img}]
             });
         }        
         };
@@ -32,10 +36,10 @@ export default function ChannelList() {
     }
 
     return (channels) ? (
-        <div>
+        <Container className='channel-container'>
             {channels.map((channel) => {
-                return <Channel deleteChannel={deleteChannel} key={channel.id} room={channel.room} creator={channel.creator} id={channel.id} />
+                return <Channel deleteChannel={deleteChannel} key={channel.id} room={channel.room} creator={channel.creator} id={channel.id} img={channel.img}/>
             })}
-        </div>
+        </Container>
     ) : null
 }

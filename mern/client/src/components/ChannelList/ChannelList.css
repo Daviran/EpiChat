@@ -1,0 +1,7 @@
+.channel-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5rem;
+  flex-wrap: wrap; }
+
+/*# sourceMappingURL=ChannelList.css.map */

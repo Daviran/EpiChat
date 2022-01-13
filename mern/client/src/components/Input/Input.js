@@ -1,9 +1,13 @@
 import React from 'react'
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
+import '../Input/Input.css'
 
 export default function Input({ message, setMessage, sendMessage }) {
     return (
-         <form>
-            <input 
+         <Form className='inputForm'>
+            <Form.Control 
                 className='input'
                 type='text'
                 placeholder='Ecrivez un message...'
@@ -11,7 +15,7 @@ export default function Input({ message, setMessage, sendMessage }) {
                 onChange={(event) => setMessage(event.target.value)}
                 onKeyPress={(event) => event.key === 'Enter' ? sendMessage(event) : null} 
             />
-            <button className='sendButton' onClick={(event) => sendMessage(event)} >Envoyer</button>
-         </form>
+            <Button variant='primary' className='sendButton' onClick={(event) => sendMessage(event)} >Envoyer</Button>
+         </Form>
     )
 }
