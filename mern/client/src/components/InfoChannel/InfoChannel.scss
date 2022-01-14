@@ -1,12 +1,14 @@
 .info-channel {
-    background-color: rgb(19, 29, 65);
-    color: lightgray;
-    padding: 1rem;
+    background-color: rgb(19, 29, 65) !important;
+    color: lightgray !important;
+    padding: 1rem !important;
     margin-right: 2rem;
     border-radius: 5px;
     // border-right: solid 20px rgb(7, 12, 29);
     &:hover {
         font-weight: 700;
+        background-color: rgb(247, 247, 247) !important;
+        color: rgb(182, 182, 182) !important;
     }
     &__image {
         width: 50px;

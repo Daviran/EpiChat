@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Chat from '../Chat/Chat'
 
 
 import './Channel.css';
@@ -10,7 +11,6 @@ import './Channel.css';
 export default function Channel({room, creator, id, img, deleteChannel}) {
 
     const [pseudo, setPseudo] = useState('');
-    const ENDPOINT = 'http://localhost:5000'
 
     
 
@@ -24,8 +24,6 @@ export default function Channel({room, creator, id, img, deleteChannel}) {
             alert("Veuillez renseigner un pseudo !")
         }
         else {
-            // const socket = io.connect(ENDPOINT);
-            // socket.emit('join', room);
             return
         }
     

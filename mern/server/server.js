@@ -23,8 +23,8 @@ app.use(express.json());
 app.use(require("./routes/record"));
 
 const dbo = require("./db/conn");
+const ObjectId = require("mongodb").ObjectId;
 const { error } = require('console');
-
 
 io.on('connection', (socket) => {
 
@@ -44,9 +44,224 @@ io.on('connection', (socket) => {
     });
 
     socket.on('sendMessage', (data, cb) => {
-        console.log(data);
-        socket.to(data.room).emit('message', data);
+        const nick = /^\/nick/;
+        const list = /^\/list/;
+        const create = /^\/create/;
+        const suppression = /^\/delete/;
+        const join = /^\/join/;
+        const quit = /^\/quit/;
+        const users = /^\/users/;
+        const msg = /^\/msg/;
+
+        const message = data.message;
+        const pseudo = data.author;
+
+        const regNick = nick.exec(message);
+        const regList = list.exec(message);
+        const regCreate = create.exec(message);
+        const regSuppression = suppression.exec(message);
+        const regJoin = join.exec(message);
+        const regQuit = quit.exec(message);
+        const regUsers = users.exec(message);
+        const regMsg = msg.exec(message);
+
+        let connect = dbo.getDb();
+
+
+        if(regNick) {
+
+            const regNewNick = /(?<=\/nick ).[a-zà-ÿ]*/i;
+            const newNick = regNewNick.exec(regNick.input);
+
+            const messageData = {
+                room: data.room,
+                author: data.room,
+                message: `Abracadabra, ${pseudo} devient ${newNick}`,
+                time:
+                    new Date(Date.now()).getHours() +
+                    ":" + 
+                    new Date(Date.now()).getMinutes(),
+            };
+
+            socket.to(data.room).emit('message', messageData);
+            socket.to(data.room).emit('changeNickname', newNick);
+
+        } else if(regList) {
+            
+            const regNewList = /(?<=\/list ).[a-zà-ÿ]*/i;
+            const newList = regNewList.exec(regList.input);            
+
+            connect.collection("channels")
+            .find({})
+            .toArray(function (err, result) {
+                if (err) throw err;
+                
+                var channels = [];
+
+                if(newList == null) { 
+                    for(let i = 0; i <result.length; i++) {
+                        channels.push(result[i].name);
+                    }
+                } else {
+                    for(let i = 0; i <result.length; i++) {
+                        if(result[i].name.includes(newList) == true) {
+                            channels.push(result[i].name);
+                        }
+                    }
+                }
+
+            var channelsData = channels.join(', ');
+
+                const messageData = {
+                    room: data.room,
+                    author: data.room,
+                    message: channelsData,
+                    time:
+                        new Date(Date.now()).getHours() +
+                        ":" + 
+                        new Date(Date.now()).getMinutes(),
+                };
+
+                socket.to(data.room).emit('message', messageData);
+            });
+
+            
+            
+
+        } else if(regCreate) {
+
+            const regNewCreate = /(?<=\/create ).[a-zà-ÿ]*/i;
+            const newCreate = regNewCreate.exec(regCreate.input);
+            
+            let myobj = {
+                name: newCreate[0],
+                creator: pseudo,
+                img: '',
+              };
+              connect.collection("channels").insertOne(myobj, function (err, res) {
+                if (err) throw err;
+
+                const messageData = {
+                    room: data.room,
+                    author: data.room,
+                    message: `Salon ${newCreate} créé par ${pseudo} !`,
+                    time:
+                        new Date(Date.now()).getHours() +
+                        ":" + 
+                        new Date(Date.now()).getMinutes(),
+                };
+
+                socket.to(data.room).emit('message', messageData);
+              });
+           
+        } else if(regSuppression) {
+
+            const regNewSuppression = /(?<=\/delete ).[a-zà-ÿ]*/i;
+            const newSuppression = regNewSuppression.exec(regSuppression.input);
+            
+            connect.collection("channels")
+            .find({})
+            .toArray(function (err, result) {
+                if (err) throw err;
+                
+                let channelId;
+
+                for(let i = 0; i <result.length; i++) {
+                    if(result[i].name == newSuppression) {
+                        channelId = result[i]._id;
+                    }
+                }
+
+                let myquery = { _id: ObjectId( channelId )};
+                connect.collection("channels").deleteOne(myquery, function (err, obj) {
+                    if (err) throw err;
+                    const messageData = {
+                        room: data.room,
+                        author: data.room,
+                        message: `Salon ${newSuppression} supprimé par ${pseudo} !`,
+                        time:
+                            new Date(Date.now()).getHours() +
+                            ":" + 
+                            new Date(Date.now()).getMinutes(),
+                    };
+    
+                    socket.to(data.room).emit('message', messageData);
+                });
+
+            })
+
+        } else if(regJoin) {
+
+            const regNewJoin = /(?<=\/join ).[a-zà-ÿ]*/i;
+            const newJoin = regNewJoin.exec(regJoin.input);            
+
+            connect.collection("channels")
+            .find({})
+            .toArray(function (err, result) {
+                if (err) throw err;
+                
+                let channelId;
+                console.log("NEWJOIN: " + newJoin);
+
+                if(newJoin == null) { 
+                    const messageData = {
+                        room: data.room,
+                        author: data.room,
+                        message: "Nom de salon incorrect",
+                        time:
+                            new Date(Date.now()).getHours() +
+                            ":" + 
+                            new Date(Date.now()).getMinutes(),
+                    };
+    
+                    socket.to(data.room).emit('message', messageData);
+                } else {
+                    for(let i = 0; i <result.length; i++) {
+                        if(result[i].name == newJoin) {
+                            channelId = result[i]._id;
+                        }
+                    }
+
+                    const joinData = {
+                        id: channelId,
+                        room: newJoin,
+                        author: pseudo,
+                    };
+    
+                    console.log("JOIDATA: " + joinData.id, joinData.room, joinData.pseudo);
+    
+                    socket.emit('join-channel', joinData );
+
+                }
+            });
+
+        } else if(regQuit) {
+            console.log(regQuit[0])
+        } else if(regUsers) {
+            console.log(regUsers[0])
+        } else if(regMsg) {
+            console.log(regMsg[0])
+        } else {
+
+            
+
+            socket.to(data.room).emit('message', data);
+        }
+
         cb();
+    });
+
+    socket.on('leave', (pseudo, room) => {
+        const messageData = {
+            room: room,
+            author: room,
+            message: `${pseudo} a quitté le salon`,
+            time:
+                new Date(Date.now()).getHours() +
+                ":" + 
+                new Date(Date.now()).getMinutes(),
+        };
+        socket.to(room).emit('message', messageData);
     })
     // socket.on('sendMessage', messageSent);
     // socket.on('disconnect', userLeft);
@@ -86,6 +301,7 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('User has left !');
+        
     })
 })
 
@@ -95,6 +311,15 @@ httpServer.listen(port,()=>{
     });
 });
 console.log(`Server is running on port : ${port}`)
+
+
+
+
+
+
+
+
+
 // io = require('socket.io')(server);
 
 

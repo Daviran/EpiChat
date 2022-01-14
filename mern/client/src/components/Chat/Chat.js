@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 //import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import io from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
+
 import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input';
 import Messages from '../Messages/Messages';
@@ -21,6 +23,14 @@ export default function Chat({ location }) {
     const [messages, setMessages] = useState([]);
     const ENDPOINT = 'http://localhost:5000'
 
+    const history = useHistory();
+    const faireRedirection = (id, pseudo, room) => { 
+        console.log("T'es là ?");
+        let url = `http://localhost:3000/chat/${id}?pseudo=${pseudo}&room=${room}`;
+        console.log("URL: " + url);
+        history.push(url);
+    }
+
     const socket = io.connect(ENDPOINT);
 
     useEffect(() => {
@@ -28,14 +38,11 @@ export default function Chat({ location }) {
         const { pseudo, room } = queryString.parse(location.search);
         setPseudo(pseudo);
         setRoom(room);
-        setPseudos(oldPseudos => [...oldPseudos, pseudo]);
-
         console.log(pseudo);
         console.log(room);
         console.log(pseudos);
 
         socket.on('connect', () => {
-            alert("Hello " + pseudo + "!");
         })
 
         socket.emit('join', pseudo, room, message => {
@@ -50,6 +57,20 @@ export default function Chat({ location }) {
         socket.on('message', message => {
             console.log(message);
             setMessages((list) => [...list, message]);
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('changeNickname', nickname => {
+            console.log(nickname);
+            setPseudo(nickname[0]);
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('join-channel', joinData => {
+            console.log(joinData);
+            faireRedirection(joinData.id, joinData.author, joinData.room)
         })
     }, [socket]);
 
@@ -70,17 +91,15 @@ export default function Chat({ location }) {
         }
     }
 
-    console.log(message, messages);
-
     return (
         <div className='outerChatContainer'>
                 <InfoChannelList pseudo={pseudo} salon={room}/>
             <div className='innerChatContainer'>
-                <InfoBar room={room} />
+                <InfoBar socket={socket} room={room} pseudo={pseudo} setMessages={setMessages} />
                 <Messages datas={messages} pseudo={pseudo} />
                 <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-                <InfoUserList pseudos={pseudos} />
+                {/* <InfoUserList socket={socket} pseudos={pseudos} room={room} /> */}
         </div>
     )
 }

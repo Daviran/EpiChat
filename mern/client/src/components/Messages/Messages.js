@@ -6,7 +6,7 @@ import './Messages.css';
 
 export default function Messages({ datas, pseudo }) {
     return (
-        <ScrollToBottom>
+        <ScrollToBottom className='scrollBar' >
             {datas.map((data, i) => <div key={i}><Message data={data} pseudo={pseudo}/></div>)}
         </ScrollToBottom>
     )
