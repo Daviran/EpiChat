@@ -17,7 +17,8 @@ const Record = (props) => (
         }}
       >
         Delete
-      </a>
+      </a> |  
+      <Link to={"/join/" + props.record._id}>Join</Link> |
     </td>
   </tr>
 );
@@ -70,7 +71,7 @@ export default class RecordList extends Component {
   render() {
     return (
       <div>
-        <h3>Record List</h3>
+        <h3>Channel List</h3>
         <table className="table table-striped" style={{ marginTop: 20 }}>
           <thead>
             <tr>

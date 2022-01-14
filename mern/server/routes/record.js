@@ -58,6 +58,7 @@ recordRoutes.route("/update/:id").post(function (req, response) {
       name: req.body.name,
       creator: req.body.creator,
       img: req.body.img,
+
     },
   };
   db_connect
