@@ -285,14 +285,21 @@ io.on('connection', (socket) => {
         } else if(regMsg) {
             console.log(regMsg[0])
         } else {
-
-            
-
-            socket.to(data.room).emit('message', data);
-        }
+            console.log("sendmessagedb")
+            let messageData = {
+                room: data.room,
+                author: data.author,
+                message: data.message,
+            }
+              connect.collection("messages").insertOne(messageData, function (err, res) {
+                if (err) throw err;
+              });
+            socket.to(data.room).emit('message', messageData);
+        
 
         cb();
-    });
+    };
+});
 
     socket.on('leave', (pseudo, room) => {
         const messageData = {
