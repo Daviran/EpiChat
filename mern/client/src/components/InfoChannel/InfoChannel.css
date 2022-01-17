@@ -1,11 +1,13 @@
 .info-channel {
-  background-color: #131d41;
-  color: lightgray;
-  padding: 1rem;
+  background-color: #131d41 !important;
+  color: lightgray !important;
+  padding: 1rem !important;
   margin-right: 2rem;
   border-radius: 5px; }
   .info-channel:hover {
-    font-weight: 700; }
+    font-weight: 700;
+    background-color: #f7f7f7 !important;
+    color: #b6b6b6 !important; }
   .info-channel__image {
     width: 50px;
     height: 50px;

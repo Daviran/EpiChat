@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 //import { useLocation } from 'react-router-dom';
 import queryString from 'query-string';
 import io from 'socket.io-client';
+import { useHistory } from 'react-router-dom';
+
 import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input';
+import Messages from '../Messages/Messages';
 import InfoChannelList from '../InfoChannelList/InfoChannelList';
 import InfoUserList from '../InfoUserList/InfoUserList';
 
@@ -17,54 +20,104 @@ export default function Chat({ location }) {
     const [pseudos, setPseudos] = useState([]);
     const [room, setRoom] = useState('');
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState('');
+    const [messages, setMessages] = useState([]);
     const ENDPOINT = 'http://localhost:5000'
 
-    let socket = io(ENDPOINT);
+    const history = useHistory();
+    const joinRedirection = (id, pseudo, room) => { 
+        let url = `http://localhost:3000/chat/${id}?pseudo=${pseudo}&room=${room}`;
+        history.push(url);
+    }
+
+    const leaveRedirection = () => { 
+        history.push("/");
+    }
+
+    const socket = io.connect(ENDPOINT);
 
     useEffect(() => {
 
         const { pseudo, room } = queryString.parse(location.search);
         setPseudo(pseudo);
         setRoom(room);
-        setPseudos(oldPseudos => [...oldPseudos, pseudo]);
-
         console.log(pseudo);
         console.log(room);
         console.log(pseudos);
 
         socket.on('connect', () => {
-            alert("Hello " + pseudo + "!");
         })
 
-        socket.emit('join', pseudo, room);
+        socket.emit('join', pseudo, room, message => {
+            console.log(message);
+            setMessages((list) => [...list, message]);
+        });
 
     }, [ENDPOINT, location.search])
 
 
     useEffect(() => {
         socket.on('message', message => {
-            setMessages([...messages, message]);
+            console.log(message);
+            setMessages((list) => [...list, message]);
         })
-    }, [messages]);
+    }, [socket]);
 
-    const sendMessage = (event) => {
+    useEffect(() => {
+        socket.on('changeNickname', nickname => {
+            console.log(nickname);
+            setPseudo(nickname[0]);
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('join-channel', joinData => {
+            console.log(joinData);
+            joinRedirection(joinData.id, joinData.author, joinData.room)
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('leave-channel', leaveData => {
+            console.log(leaveData);
+            //setPseudo(null);
+            //leaveRedirection();
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('leave-this', leaveData => {
+            console.log(leaveData);
+            
+            leaveRedirection();
+        })
+    }, [socket]);
+
+    const sendMessage = async (event) => {
         event.preventDefault();
-        if(message) {
-            socket.emit('sendMessage', message, () => setMessage(''));
+        if(message !== '') {
+            const messageData = {
+                room: room,
+                author: pseudo,
+                message: message,
+                time:
+                    new Date(Date.now()).getHours() +
+                    ":" + 
+                    new Date(Date.now()).getMinutes(),
+            };
+
+           await socket.emit('sendMessage', messageData, () => setMessage(''));
         }
     }
-
-    console.log(message, messages);
 
     return (
         <div className='outerChatContainer'>
                 <InfoChannelList pseudo={pseudo} salon={room}/>
             <div className='innerChatContainer'>
-                <InfoBar room={room} />
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                <InfoBar socket={socket} room={room} pseudo={pseudo} setMessages={setMessages} />
+                <Messages datas={messages} pseudo={pseudo} />
+                <Input pseudo={pseudo} message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-                <InfoUserList location={location} pseudos={pseudos} />
+                {/* <InfoUserList socket={socket} pseudos={pseudos} room={room} /> */}
         </div>
     )
 }

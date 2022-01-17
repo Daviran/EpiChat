@@ -12,17 +12,32 @@ export default function ChannelList() {
        
     useEffect(() => {
     const getChannels = async () => {
-        const fetchChannels = await axios.get('http://localhost:5000/channel/');
+        var fetchChannels = await axios.get('http://localhost:5000/channel/');
         console.log(fetchChannels);
         for(let i = 0; i < fetchChannels.data.length; i++) {
             setChannel(prevChannels => {
                 return [...prevChannels, {id: fetchChannels.data[i]._id, room: fetchChannels.data[i].name, creator: fetchChannels.data[i].creator, img: fetchChannels.data[i].img}]
             });
-        }        
-        };
+        }
+        
+        var checkChannels = () => {
+            channels.forEach(channel => {
+                for(let i = 0; i < fetchChannels.data.length; i++) {
+                    if(channel.room === fetchChannels[i].name) {
+                        return
+                    } else {
+                        setChannel(channels.filter((el) => el.room !== channel.room));
+                    }
+                }   
+            })
+        }
+        checkChannels();
+    }
+
 
         getChannels();
     }, []);
+
 
     const deleteChannel = async (id) => {
         console.log(id);

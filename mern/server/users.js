@@ -1,6 +1,7 @@
 const users = [];
 
 const addUser = ({ id, pseudo, room }) => {
+    console.log("ICI :" + pseudo);
     pseudo = pseudo.trim().toLowerCase();
     room = room.trim().toLowerCase();
 
