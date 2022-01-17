@@ -24,11 +24,13 @@ export default function Chat({ location }) {
     const ENDPOINT = 'http://localhost:5000'
 
     const history = useHistory();
-    const faireRedirection = (id, pseudo, room) => { 
-        console.log("T'es là ?");
+    const joinRedirection = (id, pseudo, room) => { 
         let url = `http://localhost:3000/chat/${id}?pseudo=${pseudo}&room=${room}`;
-        console.log("URL: " + url);
         history.push(url);
+    }
+
+    const leaveRedirection = () => { 
+        history.push("/");
     }
 
     const socket = io.connect(ENDPOINT);
@@ -70,7 +72,23 @@ export default function Chat({ location }) {
     useEffect(() => {
         socket.on('join-channel', joinData => {
             console.log(joinData);
-            faireRedirection(joinData.id, joinData.author, joinData.room)
+            joinRedirection(joinData.id, joinData.author, joinData.room)
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('leave-channel', leaveData => {
+            console.log(leaveData);
+            //setPseudo(null);
+            //leaveRedirection();
+        })
+    }, [socket]);
+
+    useEffect(() => {
+        socket.on('leave-this', leaveData => {
+            console.log(leaveData);
+            
+            leaveRedirection();
         })
     }, [socket]);
 
@@ -97,7 +115,7 @@ export default function Chat({ location }) {
             <div className='innerChatContainer'>
                 <InfoBar socket={socket} room={room} pseudo={pseudo} setMessages={setMessages} />
                 <Messages datas={messages} pseudo={pseudo} />
-                <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                <Input pseudo={pseudo} message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
                 {/* <InfoUserList socket={socket} pseudos={pseudos} room={room} /> */}
         </div>

@@ -30,6 +30,11 @@ io.on('connection', (socket) => {
 
     socket.on('join', (pseudo, room, cb) => {
         socket.join(room);
+        console.log(pseudo);
+        const id = socket.id;
+        addUser({id, pseudo, room});
+        const user = getUser(socket.id);
+        console.log( 'USER: ' + user.id, user.room, user.pseudo);
         const messageData = {
             room: room,
             author: room,
@@ -236,7 +241,45 @@ io.on('connection', (socket) => {
             });
 
         } else if(regQuit) {
-            console.log(regQuit[0])
+            const regNewQuit = /(?<=\/quit ).[a-zà-ÿ]*/i;
+            const newQuit = regNewQuit.exec(regQuit.input); 
+
+            if(newQuit) {
+                socket.leave(newQuit[0]);
+            
+
+                if(data.room != newQuit) {
+
+                    const messageData = {
+                        room: data.room,
+                        author: data.room,
+                        message: `${pseudo} a quitté le salon ${newQuit[0]} !`,
+                        time:
+                            new Date(Date.now()).getHours() +
+                            ":" + 
+                            new Date(Date.now()).getMinutes(),
+                    };
+
+                    socket.to(data.room).emit('message', messageData);
+                    socket.emit('leave-channel', pseudo);
+
+                } else if(data.room != newQuit) {
+                    socket.emit('leave-this', newQuit);
+                }
+            } else {
+                const messageData = {
+                    room: data.room,
+                    author: data.room,
+                    message: `${pseudo}, veuillez préciser le salon que vous voulez quitter !`,
+                    time:
+                        new Date(Date.now()).getHours() +
+                        ":" + 
+                        new Date(Date.now()).getMinutes(),
+                };
+
+                socket.to(data.room).emit('message', messageData);
+            }
+
         } else if(regUsers) {
             console.log(regUsers[0])
         } else if(regMsg) {
