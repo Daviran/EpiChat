@@ -31,21 +31,15 @@ export default function Chat({ location }) {
   };
   const getMessages = async (currentRoom) => {
     let fetchMessages = await axios.get("http://localhost:5000/messages/");
-    console.log(currentRoom);
-    console.log(fetchMessages.data.length)
     for (let i = 0; i < fetchMessages.data.length; i++) {
       if (fetchMessages.data[i].room === currentRoom) {
-          console.log("condition ok")
           setMessages(prevMessages => {
             return [...prevMessages, {
                 id: fetchMessages.data[i]._id,
                 room: fetchMessages.data[i].room,
-                creator: fetchMessages.data[i].author,
+                author: fetchMessages.data[i].author,
                 message: fetchMessages.data[i].message}]
         });
-      }
-      else {
-          console.log("condition not ok");
       }
     }
   };
