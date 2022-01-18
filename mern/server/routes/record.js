@@ -23,6 +23,17 @@ recordRoutes.route("/channel").get(function (req, res) {
     });
 });
 
+recordRoutes.route("/messages").get(function (req, res) {
+  let db_connect =dbo.getDb();
+  db_connect
+  .collection("messages")
+  .find({})
+  .toArray(function(err,result) {
+    if(err) throw err;
+    res.json(result);
+  })
+})
+
 // single record by id
 recordRoutes.route("/channel/:id").get(function (req, res) {
   let db_connect = dbo.getDb();
