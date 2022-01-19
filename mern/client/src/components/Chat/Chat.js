@@ -1,27 +1,26 @@
 import React, { useState, useEffect } from 'react';
 //import { useLocation } from 'react-router-dom';
-import queryString from 'query-string';
+// import queryString from 'query-string';
 import io from 'socket.io-client';
 import { useHistory } from 'react-router-dom';
 
-import InfoBar from '../InfoBar/InfoBar'
-import Input from '../Input/Input';
-import Messages from '../Messages/Messages';
 import InfoChannelList from '../InfoChannelList/InfoChannelList';
-import InfoUserList from '../InfoUserList/InfoUserList';
+import Modalchat from '../Modalchat/Modalchat';
+
+import Modal from 'react-bootstrap/Modal';
 
 import './Chat.css';
 
-export default function Chat({ location }) {
+export default function Chat({ id, pseudo, room, setChannelDisplay, socket }) {
 
-   
-
-    const [pseudo, setPseudo] = useState('');
-    const [pseudos, setPseudos] = useState([]);
-    const [room, setRoom] = useState('');
+    //const [show, setShow] = useState(true);
+    
+    const [nickname, setNickname] = useState(pseudo);
+    const [chosenRooms, setChosenRoom] = useState([room]);
+    var roomIndex = chosenRooms.length -1;
+    //const [salon, setSalon] = useState('');
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    const ENDPOINT = 'http://localhost:5000'
 
     const history = useHistory();
     const joinRedirection = (id, pseudo, room) => { 
@@ -33,39 +32,58 @@ export default function Chat({ location }) {
         history.push("/");
     }
 
-    const socket = io.connect(ENDPOINT);
+    // useEffect(() => {
+
+    //     console.log("PSEUDO: " + pseudo);
+    //     console.log("SALON: " + room);
+        
+    //     function setDatas() {
+    //         setNickname(pseudo);
+    //         setSalon(room);
+    //         console.log(nickname);
+    //         console.log(salon);
+    //     }
+
+    //     setDatas();
+    //     //console.log(pseudos);
+
+    // }, [pseudo, room, nickname, salon]);
 
     useEffect(() => {
+       
+            // socket.on('connect', () => {
+            //     console.log("JE SUIS CONNECTE");
+            //     console.log(socket.id);
+            // });
 
-        const { pseudo, room } = queryString.parse(location.search);
-        setPseudo(pseudo);
-        setRoom(room);
-        console.log(pseudo);
-        console.log(room);
-        console.log(pseudos);
+            //const newSocket = io.connect(ENDPOINT);
 
-        socket.on('connect', () => {
-        })
+        
+            socket.emit('join', nickname, chosenRooms[roomIndex], message => {
+                console.log(message);
+                console.log(chosenRooms);
+                console.log(socket.id)
+                    setMessages((list) => [...list, message]);
+            });
 
-        socket.emit('join', pseudo, room, message => {
-            console.log(message);
-            setMessages((list) => [...list, message]);
-        });
+            //return () => newSocket.close();
+        
 
-    }, [ENDPOINT, location.search])
+    }, [])
 
 
     useEffect(() => {
         socket.on('message', message => {
             console.log(message);
-            setMessages((list) => [...list, message]);
+                setMessages((list) => [...list, message]);
+                console.log(messages);
         })
     }, [socket]);
 
     useEffect(() => {
-        socket.on('changeNickname', nickname => {
-            console.log(nickname);
-            setPseudo(nickname[0]);
+        socket.on('changeNickname', nickName => {
+            console.log(nickName);
+            setNickname(nickName[0]);
         })
     }, [socket]);
 
@@ -95,28 +113,44 @@ export default function Chat({ location }) {
     const sendMessage = async (event) => {
         event.preventDefault();
         if(message !== '') {
-            const messageData = {
-                room: room,
-                author: pseudo,
-                message: message,
-                time:
-                    new Date(Date.now()).getHours() +
-                    ":" + 
-                    new Date(Date.now()).getMinutes(),
-            };
-
-           await socket.emit('sendMessage', messageData, () => setMessage(''));
+                const messageData = {
+                    room: chosenRooms[roomIndex],
+                    author: nickname,
+                    message: message,
+                    time:
+                        new Date(Date.now()).getHours() +
+                        ":" + 
+                        new Date(Date.now()).getMinutes(),
+                    };
+                await socket.emit('sendMessage', messageData, () => setMessage(''));
+                setMessages((list) => [...list, messageData]);
         }
+    }
+
+    function test() {
+        console.log(chosenRooms);
+        console.log(chosenRooms[roomIndex]);
+        console.log(messages);
     }
 
     return (
         <div className='outerChatContainer'>
-                <InfoChannelList pseudo={pseudo} salon={room}/>
+                <InfoChannelList pseudo={nickname} salon={chosenRooms[roomIndex]} setChosenRoom={setChosenRoom} setMessages={setMessages} chosenRooms={chosenRooms} socket={socket} />
             <div className='innerChatContainer'>
-                <InfoBar socket={socket} room={room} pseudo={pseudo} setMessages={setMessages} />
-                <Messages datas={messages} pseudo={pseudo} />
-                <Input pseudo={pseudo} message={message} setMessage={setMessage} sendMessage={sendMessage} />
+                <Modalchat
+                    setChannelDisplay={setChannelDisplay}
+                    socket={socket} 
+                    room={chosenRooms[roomIndex]} 
+                    pseudo={nickname} 
+                    datas={messages} 
+                    message={message} 
+                    setMessage={setMessage} 
+                    setMessages={setMessages}
+                    sendMessage={sendMessage}
+                    setChosenRoom={setChosenRoom} 
+                    chosenRooms={chosenRooms}/>
             </div>
+            <button onClick={() => test()}></button>
                 {/* <InfoUserList socket={socket} pseudos={pseudos} room={room} /> */}
         </div>
     )

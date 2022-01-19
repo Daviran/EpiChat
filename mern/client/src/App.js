@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 // We use Route in order to define the different routes of our application
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -14,13 +14,26 @@ import CreateChannel from "./components/CreateChannel/CreateChannel";
 import EditChannel from "./components/EditChannel/EditChannel";
 import Chat from "./components/Chat/Chat";
 
+import io from 'socket.io-client';
+
 const App = () => {
+
+  const ENDPOINT = 'http://localhost:5000'
+    const [socket, setSocket] = useState()
+
+    useEffect(() => {
+        const newSocket = io.connect(ENDPOINT);
+        setSocket(newSocket);
+
+        return () => newSocket.close();
+    }, [])
+
   return (
     <div>
       <Router>
         <Banner />
             <Route exact path="/">
-              <ChannelList />
+              <ChannelList socket={socket} />
             </Route>
             <Route path="/edit/:id" component={EditChannel} />
             <Route path="/chat/:id" component={Chat} />

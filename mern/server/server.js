@@ -27,14 +27,27 @@ const ObjectId = require("mongodb").ObjectId;
 const { error } = require('console');
 
 io.on('connection', (socket) => {
+    console.log("SOCKETID: " + socket.id);
 
     socket.on('join', (pseudo, room, cb) => {
         socket.join(room);
-        console.log(pseudo);
         const id = socket.id;
         addUser({id, pseudo, room});
-        const user = getUser(socket.id);
-        console.log( 'USER: ' + user.id, user.room, user.pseudo);
+        const user = getUser(pseudo);
+
+        const welcomeMessage = {
+            room: room,
+            author: room,
+            message: `${pseudo} s'est connecté à ${room}`,
+            time:
+                new Date(Date.now()).getHours() +
+                ":" + 
+                new Date(Date.now()).getMinutes(),
+        };
+
+        socket.broadcast.to(room).emit('message', welcomeMessage);
+
+
         const messageData = {
             room: room,
             author: room,
@@ -49,6 +62,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('sendMessage', (data, cb) => {
+        console.log({data});
         const nick = /^\/nick/;
         const list = /^\/list/;
         const create = /^\/create/;
@@ -206,8 +220,8 @@ io.on('connection', (socket) => {
                 if (err) throw err;
                 
                 let channelId;
-                console.log("NEWJOIN: " + newJoin);
 
+                
                 if(newJoin == null) { 
                     const messageData = {
                         room: data.room,
@@ -233,7 +247,6 @@ io.on('connection', (socket) => {
                         author: pseudo,
                     };
     
-                    console.log("JOIDATA: " + joinData.id, joinData.room, joinData.pseudo);
     
                     socket.emit('join-channel', joinData );
 
@@ -246,9 +259,10 @@ io.on('connection', (socket) => {
 
             if(newQuit) {
                 socket.leave(newQuit[0]);
+                removeUser(pseudo);
             
 
-                if(data.room != newQuit) {
+                // if(data.room != newQuit) {
 
                     const messageData = {
                         room: data.room,
@@ -263,9 +277,9 @@ io.on('connection', (socket) => {
                     socket.to(data.room).emit('message', messageData);
                     socket.emit('leave-channel', pseudo);
 
-                } else if(data.room != newQuit) {
-                    socket.emit('leave-this', newQuit);
-                }
+                // } else if(data.room != newQuit) {
+                //     socket.emit('leave-this', newQuit);
+                // }
             } else {
                 const messageData = {
                     room: data.room,
@@ -281,9 +295,7 @@ io.on('connection', (socket) => {
             }
 
         } else if(regUsers) {
-            console.log(regUsers[0])
         } else if(regMsg) {
-            console.log(regMsg[0])
         } else {
 
             
@@ -295,10 +307,15 @@ io.on('connection', (socket) => {
     });
 
     socket.on('leave', (pseudo, room) => {
+        console.log("SOCKETID: " + socket.id);
+
+        socket.leave(room);
+        removeUser(pseudo);
+
         const messageData = {
             room: room,
             author: room,
-            message: `${pseudo} a quitté le salon`,
+            message: `${pseudo} a quitté le salon ${room}`,
             time:
                 new Date(Date.now()).getHours() +
                 ":" + 
@@ -344,7 +361,17 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('User has left !');
-        
+        // const id = socket.id;
+        // const user = getUser(id);
+        // console.log(user.pseudo);
+        // const messageData = {
+        //     message: `${user} a quitté le salon`,
+        //     time:
+        //         new Date(Date.now()).getHours() +
+        //         ":" + 
+        //         new Date(Date.now()).getMinutes(),
+        // };
+        // socket.to(room).emit('message', messageData);
     })
 })
 

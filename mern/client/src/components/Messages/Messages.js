@@ -4,10 +4,11 @@ import Message from '../Message/Message';
 
 import './Messages.css';
 
-export default function Messages({ datas, pseudo }) {
-    return (
+export default function Messages({ datas, pseudo, room }) {
+    return ( datas ? (
         <ScrollToBottom className='scrollBar' >
-            {datas.map((data, i) => <div key={i}><Message data={data} pseudo={pseudo}/></div>)}
-        </ScrollToBottom>
+            {datas.map((data, i) => <div key={i}><Message data={data} pseudo={pseudo} room={room}/></div>)}
+        </ScrollToBottom> )
+        : null 
     )
 }

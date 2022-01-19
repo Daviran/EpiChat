@@ -64,6 +64,10 @@ p {
     background-color: rgb(187, 187, 187);
 }
 
+.backgroundGreen {
+    background-color: rgb(22, 199, 22);
+}
+
 .startTime {
     margin-top: 0.5rem;
     margin-bottom: 1rem;
