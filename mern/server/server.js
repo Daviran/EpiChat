@@ -34,6 +34,7 @@ io.on('connection', (socket) => {
         const id = socket.id;
         addUser({id, pseudo, room});
         const user = getUser(pseudo);
+        console.log(user);
 
         const welcomeMessage = {
             room: room,
@@ -60,6 +61,16 @@ io.on('connection', (socket) => {
         cb(messageData);
 
     });
+
+    socket.on('get-room-users', (data, cb) => {
+        room = data.trim().toLowerCase();
+        console.log(room);
+        let usersRoom = []
+        usersRoom.push(getUsersInRoom(room));
+        console.log("USERSROOM: " + usersRoom);
+        console.log("TYPESERVER: " + typeof(usersRoom));
+        cb(usersRoom);
+    })
 
     socket.on('sendMessage', (data, cb) => {
         console.log({data});
@@ -103,7 +114,6 @@ io.on('connection', (socket) => {
             };
 
             socket.to(data.room).emit('message', messageData);
-            socket.to(data.room).emit('changeNickname', newNick);
 
         } else if(regList) {
             
@@ -141,7 +151,7 @@ io.on('connection', (socket) => {
                         new Date(Date.now()).getMinutes(),
                 };
 
-                socket.to(data.room).emit('message', messageData);
+                socket.broadcast.to(data.room).emit('message', messageData);
             });
 
             
@@ -155,7 +165,7 @@ io.on('connection', (socket) => {
             let myobj = {
                 name: newCreate[0],
                 creator: pseudo,
-                img: '',
+                img: 'default.jpg',
               };
               connect.collection("channels").insertOne(myobj, function (err, res) {
                 if (err) throw err;
@@ -275,30 +285,60 @@ io.on('connection', (socket) => {
                     };
 
                     socket.to(data.room).emit('message', messageData);
-                    socket.emit('leave-channel', pseudo);
+                    //socket.emit('leave-channel', pseudo);
 
                 // } else if(data.room != newQuit) {
                 //     socket.emit('leave-this', newQuit);
                 // }
-            } else {
-                const messageData = {
-                    room: data.room,
-                    author: data.room,
-                    message: `${pseudo}, veuillez préciser le salon que vous voulez quitter !`,
-                    time:
-                        new Date(Date.now()).getHours() +
-                        ":" + 
-                        new Date(Date.now()).getMinutes(),
-                };
-
-                socket.to(data.room).emit('message', messageData);
             }
 
         } else if(regUsers) {
+            socket.on('getChannelUsers', (dataCurrentRoom, cb) => {
+                const newRoom = dataCurrentRoom.trim().toLowerCase();
+                const channelUsers = getUsersInRoom(newRoom);
+                console.log(channelUsers);
+                const channelUsersShaped = channelUsers.join(', ');
+                cb(channelUsersShaped);
+            })
         } else if(regMsg) {
+            socket.on('privateMessage', (privateData, cb) => {
+                const privateNick = privateData.privNick;
+                const privateMsg = privateData.privMSG;
+                console.log("privateNick: " + privateNick);
+                console.log("privateMsg: " + privateMsg);
+                const formatNick = privateNick.trim().toLowerCase();
+                console.log("Pseudo PM: " + formatNick)
+                const user = getUser(formatNick);
+                if(user) {
+                    const userId = user.id;
+                    console.log('USERID PRIVATE MSG: ' + userId);
+                    const privateMessageData = {
+                        room: 'PM',
+                        author: data.author,
+                        message: privateMsg,
+                        time:
+                            new Date(Date.now()).getHours() +
+                            ":" + 
+                            new Date(Date.now()).getMinutes(),
+                    };
+                    socket.to(userId).emit('privateMessage', privateMessageData);
+                    console.log("ES TU ICI PETIT SCARABEE ?");
+    
+                    cb();
+                } else {
+                    const erreur = "Utilisateur non connecté...";
+                    cb(erreur);
+                }
+            })
         } else {
-
-            
+            let messageData = {
+                room: data.room,
+                author: data.author,
+                message: data.message,
+            }
+              connect.collection("messages").insertOne(messageData, function (err, res) {
+                if (err) throw err;
+              });
 
             socket.to(data.room).emit('message', data);
         }

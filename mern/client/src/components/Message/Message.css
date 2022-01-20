@@ -56,6 +56,10 @@ p {
     color: white;
 }
 
+.colorPink {
+    color: rgb(183, 0, 255);
+}
+
 .backgroundBlue {
     background-color: rgb(21, 115, 255);
 }

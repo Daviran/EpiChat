@@ -4,15 +4,16 @@ import onlineIcon from '../../icons/onlineIcon.png';
 
 import './InfoBar.css';
 
-export default function InfoBar( { room, socket, pseudo, setMessages, setChosenRoom, chosenRooms, setSalon, setShow, setChannelDisplay }) {
+export default function InfoBar( { room, socket, pseudo, setMessages, setChosenRoom, chosenRooms, setSalon, setShow, setChannelDisplay, getMessages }) {
 
     const [check, setCheck] = useState(false);
 
     function handleClick(chan) {
         chosenRooms.pop() 
-        setChosenRoom(chosenRooms);
+        setChosenRoom(() => chosenRooms);
         socket.emit('leave', pseudo, chan);
         setMessages('');
+        displayMessages();
 
         setCheck(true);
 
@@ -35,6 +36,14 @@ export default function InfoBar( { room, socket, pseudo, setMessages, setChosenR
         //     setCheck(true);
         //     setMessages([null]);
         // }
+    }
+
+    function displayMessages() {
+        console.log(chosenRooms);
+        console.log(room);
+        let roomIndex = chosenRooms.length - 1;
+        console.log(roomIndex);
+        getMessages(chosenRooms[roomIndex]);
     }
 
     window.onbeforeunload = closingCode;

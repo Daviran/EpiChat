@@ -7,7 +7,7 @@ export default function InfoUser({ user }) {
 
     return (
         <ListGroup.Item>
-            { user !== null ? (<p>{user}</p>) : null }
+            {user}
         </ListGroup.Item>
     )
 }

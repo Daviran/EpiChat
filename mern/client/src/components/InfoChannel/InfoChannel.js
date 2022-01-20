@@ -5,7 +5,7 @@ import Image from 'react-bootstrap/Image';
 
 import './InfoChannel.css';
 
-export default function InfoChannel({ id, img, room, creator, pseudo, salon, setChosenRoom, chosenRooms, socket, setMessages, setShow }) {
+export default function InfoChannel({ id, img, room, creator, pseudo, salon, setChosenRoom, chosenRooms, socket, setMessages, setShow, getMessages }) {
 
     function handleClick(chan) {
         console.log("CHAN: " + chan)
@@ -18,27 +18,14 @@ export default function InfoChannel({ id, img, room, creator, pseudo, salon, set
             console.log(chosenRooms);
             setChosenRoom(oldArray => [...oldArray, chan]);
             console.log(chosenRooms);
+            getMessages(chan);
         } else {
             setChosenRoom(oldArray => [...oldArray, chan]);
             socket.emit('join', pseudo, room, message => {
                 setMessages([message]);
+                getMessages(chan);
             });
         }
-        // let check = true;
-        // console.log(chan);
-        // if(chosenRooms !== undefined && chosenRooms === chan) check = false;
-        // if(check === true) {
-        //     socket.emit('join', pseudo, room, message => {
-        //         console.log(message);
-        //         console.log(chosenRooms);
-        //         setMessages((list) => [list, message]);
-        //         setChosenRoom(chan);
-        //         console.log(chosenRooms);
-        //         setShow(true);
-        //     });
-        // } else {
-        //     return;
-        //}
     }
 
     return (

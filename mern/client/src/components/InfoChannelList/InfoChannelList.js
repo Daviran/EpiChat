@@ -6,9 +6,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import '../InfoChannelList/InfoChannelList.css';
 
 
-export default function InfoChannelList({ pseudo, salon, setChosenRoom, chosenRooms, socket, setMessages, setShow }) {
-
-    const [channels, setChannel] = useState([]);
+export default function InfoChannelList({ pseudo, salon, setChosenRoom, chosenRooms, socket, setMessages, setShow, getMessages, channels, setChannel }) {
 
     useEffect(() => {
     const getChannels = async () => {
@@ -28,6 +26,7 @@ export default function InfoChannelList({ pseudo, salon, setChosenRoom, chosenRo
         <ListGroup className='infoChannelList'>
             {channels.map((channel) => {
                 return <InfoChannel 
+                        getMessages={getMessages}
                         setShow={setShow}
                         key={channel.id} 
                         id={channel.id} 

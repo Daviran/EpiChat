@@ -35,6 +35,18 @@ recordRoutes.route("/channel/:id").get(function (req, res) {
       });
 });
 
+// Save messages
+recordRoutes.route("/messages").get(function (req, res) {
+  let db_connect =dbo.getDb();
+  db_connect
+  .collection("messages")
+  .find({})
+  .toArray(function(err,result) {
+    if(err) throw err;
+    res.json(result);
+  })
+})
+
 // create a new record.
 recordRoutes.route("/channel/add").post(function (req, response) {
   let db_connect = dbo.getDb();

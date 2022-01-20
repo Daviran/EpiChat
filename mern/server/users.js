@@ -34,6 +34,15 @@ const getUser = (name) => {
     return user;
 }
 
-const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+const getUsersInRoom = (room) => {
+    let catchUsers = users.filter((user) => user.room === room);
+    console.log("TYPECATCH: " + typeof(catchUsers));
+    let usersRoom = [];
+    for(let i = 0; i < users.length; i++) {
+        usersRoom.push(catchUsers[i].pseudo);
+    }
+    console.log("TYPE: " + typeof(usersRoom));
+    return usersRoom;
+};
 
 module.exports = { addUser, removeUser, getUser, getUsersInRoom };
