@@ -336,4 +336,5 @@ export default function Chat({ id, pseudo, room, setChannelDisplay, socket }) {
                 {/* <InfoUserList socket={socket} pseudo={nickname} room={chosenRooms[roomIndex]} /> */}
         </div>
     )
+
 }

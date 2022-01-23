@@ -331,6 +331,7 @@ io.on('connection', (socket) => {
                 }
             })
         } else {
+          // voir pour supprimer le messageData superflue
             let messageData = {
                 room: data.room,
                 author: data.author,
@@ -340,11 +341,14 @@ io.on('connection', (socket) => {
                 if (err) throw err;
               });
 
+
             socket.to(data.room).emit('message', data);
         }
 
+
         cb();
-    });
+    };
+});
 
     socket.on('leave', (pseudo, room) => {
         console.log("SOCKETID: " + socket.id);
