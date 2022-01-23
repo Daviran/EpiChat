@@ -56,12 +56,20 @@ p {
     color: white;
 }
 
+.colorPink {
+    color: rgb(183, 0, 255);
+}
+
 .backgroundBlue {
     background-color: rgb(21, 115, 255);
 }
 
 .backgroundLight {
     background-color: rgb(187, 187, 187);
+}
+
+.backgroundGreen {
+    background-color: rgb(22, 199, 22);
 }
 
 .startTime {

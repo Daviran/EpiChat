@@ -2,13 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Channel from '../Channel/Channel'
 import Container from 'react-bootstrap/Container';
+import Chat from '../Chat/Chat';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import './ChannelList.css';
 
-export default function ChannelList() {
+export default function ChannelList({socket}) {
 
     const [channels, setChannel] = useState([]);
+    const [channelDisplay, setChannelDisplay] = useState(false);
+    const [chatId, setChatId] = useState('');
+    const [chatRoom, setChatRoom] = useState('');
+    const [pseudo, setPseudo] = useState('');
        
     useEffect(() => {
     const getChannels = async () => {
@@ -50,11 +55,19 @@ export default function ChannelList() {
 
     }
 
+    const upDatas = (thisChatId, thisChatName, thisUserPseudo) => {
+        console.log(thisChatId);
+        setChatId(thisChatId);
+        setChatRoom(thisChatName);
+        setPseudo(thisUserPseudo);
+    }
+
     return (channels) ? (
-        <Container className='channel-container'>
+        channelDisplay === false ?
+        (<Container className='channel-container'>
             {channels.map((channel) => {
-                return <Channel deleteChannel={deleteChannel} key={channel.id} room={channel.room} creator={channel.creator} id={channel.id} img={channel.img}/>
+                return <Channel deleteChannel={deleteChannel} key={channel.id} room={channel.room} creator={channel.creator} id={channel.id} img={channel.img} setChannelDisplay={setChannelDisplay} upDatas={upDatas} />
             })}
-        </Container>
+        </Container>) : (<Chat socket={socket} key={chatId} id={chatId} pseudo={pseudo} room={chatRoom} setChannelDisplay={setChannelDisplay} />)
     ) : null
 }
