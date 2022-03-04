@@ -3,7 +3,7 @@
 Etudiant d'EPITECH, attention, le plagiat est sanctionné ! 
 ## Stack 
 <img alt="Mern stack" src="https://raw.githubusercontent.com/Daviran/EpiChat/main/assets/MERN.jpeg" />
- La stack technique se compose donc de MongoDB ( via Atlas ), ExpressJs(framework node) , ReactJs (côté client) et Nodejs côté serveur
+ La stack technique se compose donc de MongoDB ( via Atlas ), ExpressJs(framework node) , ReactJs (côté client) et Nodejs côté serveur <br> <br>
 ## But du projet
 Dans ce projet, nous avons dû créer un serveur IRC en NodeJS et ExpressJS, et un client en ReactJS. Socket.io s'occupera de la gestion des messages. <br>
 
