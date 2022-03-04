@@ -2,9 +2,12 @@
 # Epichat: Un projet IRC
 Etudiant d'EPITECH, attention, le plagiat est sanctionné ! 
 ## Stack 
-<img alt="Mern stack" src="https://raw.githubusercontent.com/Daviran/EpiChat/main/assets/MERN.jpeg" />
- La stack technique se compose donc de MongoDB ( via Atlas ), ExpressJs(framework node) , ReactJs (côté client) et Nodejs côté serveur <br> <br>
+<img alt="Mern stack" src="https://raw.githubusercontent.com/Daviran/EpiChat/main/assets/MERN.jpeg" /> <br>
+
+ La stack technique se compose donc de MongoDB ( via Atlas ), ExpressJs(framework node) , ReactJs (côté client) et Nodejs côté serveur. <br> <br>
+ 
 ## But du projet
+
 Dans ce projet, nous avons dû créer un serveur IRC en NodeJS et ExpressJS, et un client en ReactJS. Socket.io s'occupera de la gestion des messages. <br>
 
 Le serveur devra accepter plusieurs connexions simultanées et implémenter la notion de canaux :
@@ -17,7 +20,8 @@ Le serveur devra accepter plusieurs connexions simultanées et implémenter la n
 Les canaux et les messages doivent être préservés de manière persistante.
 <br><br>
 Du côté client, chaque utilisateur doit pouvoir effectuer les actions suivantes (en utilisant la commande spécifiée en
-chat, et en utilisant l'interface) : <br> 
+chat, et en utilisant l'interface) : 
+<br> 
 - /nick pseudo : définir le pseudo de l'utilisateur sur le serveur. <br>
 - /list [string] : liste les canaux disponibles sur le serveur. Si la chaîne est spécifiée, seuls ceux dont le
 dont le nom contient la chaîne.<br>
