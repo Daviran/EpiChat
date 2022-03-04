@@ -2,8 +2,7 @@
 # Epichat: Un projet IRC
 Etudiant d'EPITECH, attention, le plagiat est sanctionné ! 
 ## Stack 
-<img alt="Mern stack" src="https://i0.wp.com/leblogducodeur.fr/wp-content/uploads/2019/12/1_Y5S3wOm52_4iYusUagbEtw.jpeg?fit=1300%2C744&ssl=1
-" />
+<img alt="Mern stack" src="https://raw.githubusercontent.com/Daviran/EpiChat/main/assets/MERN.jpeg" />
  La stack technique se compose donc de MongoDB ( via Atlas ), ExpressJs(framework node) , ReactJs (côté client) et Nodejs côté serveur
 ## But du projet
 Dans ce projet, nous avons dû créer un serveur IRC en NodeJS et ExpressJS, et un client en ReactJS. Socket.io s'occupera de la gestion des messages. <br>
