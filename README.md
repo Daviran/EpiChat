@@ -18,16 +18,16 @@ Les canaux et les messages doivent être préservés de manière persistante.
 <br><br>
 Du côté client, chaque utilisateur doit pouvoir effectuer les actions suivantes (en utilisant la commande spécifiée en
 chat, et en utilisant l'interface) : <br> 
-- **/nick pseudo** : définir le pseudo de l'utilisateur sur le serveur. <br>
-- **/list [string]** : liste les canaux disponibles sur le serveur. Si la chaîne est spécifiée, seuls ceux dont le
+- /nick pseudo : définir le pseudo de l'utilisateur sur le serveur. <br>
+- /list [string] : liste les canaux disponibles sur le serveur. Si la chaîne est spécifiée, seuls ceux dont le
 dont le nom contient la chaîne.<br>
-- **/create channel** : crée un canal avec le nom spécifié.<br>
-- **/delete channel** : supprime le canal avec le nom spécifié.<br>
-- **/join channel** : joindre le canal spécifié.<br>
-- **/quit channel** : quitte le canal spécifié.<br>
-- **/users** : liste les utilisateurs actuellement dans le canal.<br>
-- **/msg nickname message** : envoie un message privé au nickname spécifié.<br>
-- **message** : envoie un message à tous les utilisateurs du canal.<br>
+- /create channel : crée un canal avec le nom spécifié.<br>
+- /delete channel : supprime le canal avec le nom spécifié.<br>
+- /join channel : joindre le canal spécifié.<br>
+- /quit channel : quitte le canal spécifié.<br>
+- /users : liste les utilisateurs actuellement dans le canal.<br>
+- /msg nickname message : envoie un message privé au nickname spécifié.<br>
+- message : envoie un message à tous les utilisateurs du canal.<br>
 <br><br>
 
 ## Setup : on se place à la racine en terminal (! Nécessite docker et docker-compose) puis : 
